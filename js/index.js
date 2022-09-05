@@ -153,6 +153,8 @@ function agregarAlCarrito(id) {
   ticketComprado.push(selectedTicket);
   renderCarrito();
   saveToLocalStorage();
+  /* Libreria Sweet Alert */
+  Swal.fire('Producto agregado!', 'Puedes seguir comprando...', 'success');
 }
 
 /* Elimina los ticket comprados */
