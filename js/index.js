@@ -24,7 +24,7 @@ function renderCarrito() {
                                   <p class="card-text">${ticketComprado[i].lugar}</p>
                               </div>
                               <div class="col text-center">
-                                  <button type="button" class="btn btn-warning btn-lg m-4" data-bs-toggle="modal" data-bs-target="#comprar" onclick="eliminarCart(${i}); saveToLocalStorage();">Eliminar</button>
+                                  <button type="button" class="btn btn-warning btn-lg m-4" onclick="eliminarCart(${i}); saveToLocalStorage();">Eliminar</button>
                               </div>
                           </div>
                       </div>
@@ -159,7 +159,36 @@ function agregarAlCarrito(id) {
 
 /* Elimina los ticket comprados */
 function eliminarCart(id) {
-  ticketComprado.splice(id, 1);
-  renderCarrito();
-  saveToLocalStorage();
+  /* libreria Sweet Alert */
+  const swalWithBootstrapButtons = Swal.mixin({
+    customClass: {
+      confirmButton: 'btn btn-success',
+      cancelButton: 'btn btn-danger',
+    },
+    buttonsStyling: false,
+  });
+
+  swalWithBootstrapButtons
+    .fire({
+      title: 'Desea quitar el evento de la lista?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'eliminar evento!',
+      cancelButtonText: 'cancelar!',
+      reverseButtons: true,
+    })
+    .then((result) => {
+      if (result.isConfirmed) {
+        /* Elimina los ticket comprados */
+        ticketComprado.splice(id, 1);
+        renderCarrito();
+        saveToLocalStorage();
+        swalWithBootstrapButtons.fire('Eliminado!', 'Su evento se eliminó de la lista.', 'success');
+      } else if (
+        /* Read more about handling dismissals below */
+        result.dismiss === Swal.DismissReason.cancel
+      ) {
+        swalWithBootstrapButtons.fire('Cancelado', 'No se eliminó de la lista', 'error');
+      }
+    });
 }
